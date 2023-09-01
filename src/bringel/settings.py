@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'log_request_id.middleware.RequestIDMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,3 +115,50 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOG_REQUEST_ID_HEADER = "HTTP_X_REQUEST_ID"
+GENERATE_REQUEST_ID_IF_NOT_IN_HEADER = True
+REQUEST_ID_RESPONSE_HEADER = "X-Request-ID"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {
+            "format": "{levelname} {asctime} {pathname} - line {lineno}: {message}",
+            "style": "{",
+        },
+        "json": {
+            "()": "bringel.logs.JSONFormatter",
+        },
+    },
+    "filters": {
+        "request_id": {
+            "()": "log_request_id.filters.RequestIDFilter",
+        }
+    },
+    "handlers": {
+        "stdout": {
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+            "filters": ["request_id"],
+        },
+    },
+    "loggers": {
+        "django": {
+            "level": "ERROR",
+            "handlers": ["stdout"],
+            "propagate": False,
+        },
+        "django_test": {
+            "level": "ERROR",
+            "handlers": ["stdout"],
+            "propagate": False,
+        },
+        "": {
+            "level": "INFO",
+            "handlers": ["stdout"],
+            "propagate": False,
+        }
+    }
+}
