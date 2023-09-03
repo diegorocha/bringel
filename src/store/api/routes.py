@@ -4,4 +4,4 @@ from store.api.viewsets import TagViewSet, SupplierViewSet
 
 router = DefaultRouter()
 router.register(r'tags', TagViewSet)
-router.register(r'supplier', SupplierViewSet)
+router.register(r'suppliers', SupplierViewSet)
