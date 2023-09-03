@@ -6,7 +6,7 @@ class Tag(models.Model):
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
         ordering = ['name']
-    name = models.CharField('Name', max_length=50, blank=False, null=False)
+    name = models.CharField('Name', max_length=50, blank=False, null=False, unique=True)
     description = models.CharField('Description', max_length=100, blank=True, null=True)
 
     def __str__(self):
