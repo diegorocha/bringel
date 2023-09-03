@@ -6,6 +6,12 @@ RUN apk add gcc musl-dev python3-dev libxslt-dev
 
 RUN pip install pip==23.2.1
 
+RUN adduser -D user
+
+USER user
+
+ENV PATH="$PATH:/home/user/.local/bin"
+
 WORKDIR /usr/app
 
 COPY requirements.txt /usr/app
