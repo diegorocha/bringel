@@ -18,7 +18,7 @@ class Supplier(models.Model):
         verbose_name = 'Supplier'
         verbose_name_plural = 'Suppliers'
         ordering = ['name']
-    name = models.CharField('Name', max_length=100, blank=False, null=False)
+    name = models.CharField('Name', max_length=100, blank=False, null=False, unique=True)
 
     def __str__(self):
         return self.name
