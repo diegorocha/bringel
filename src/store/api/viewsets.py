@@ -1,7 +1,9 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from store.api.serializers import TagSerializer, SupplierSerializer, ProductSerializer, ProductVariantSerializer
-from store.models import Tag, Supplier, Product, ProductVariant
+from store.api.serializers import TagSerializer, SupplierSerializer, ProductSerializer, ProductVariantSerializer, \
+    CustomerRatingSerializer
+from store.models import Tag, Supplier, Product, ProductVariant, CustomerRating
 
 
 class TagViewSet(ModelViewSet):
@@ -22,3 +24,8 @@ class ProductViewSet(ModelViewSet):
 class ProductVariantViewSet(ModelViewSet):
     serializer_class = ProductVariantSerializer
     queryset = ProductVariant.objects.all()
+
+
+class CustomerRatingViewset(CreateModelMixin, GenericViewSet):
+    serializer_class = CustomerRatingSerializer
+    queryset = CustomerRating.objects.all()

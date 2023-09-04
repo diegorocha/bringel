@@ -2,7 +2,7 @@ from rest_framework.fields import ReadOnlyField, CharField, FloatField
 from rest_framework.relations import SlugRelatedField, StringRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 
-from store.models import Tag, Supplier, ProductVariant, Product
+from store.models import Tag, Supplier, ProductVariant, Product, CustomerRating
 
 
 class TagSerializer(ModelSerializer):
@@ -37,3 +37,10 @@ class ProductSerializer(ModelSerializer):
     tags = SlugRelatedField(slug_field='name', many=True, queryset=Tag.objects.all())
     rating = FloatField(read_only=True)
     variants = ProductVariantNestedSerializer(many=True, read_only=True)
+
+
+class CustomerRatingSerializer(ModelSerializer):
+    class Meta:
+        model = CustomerRating
+        fields = ['product', 'rating', 'description', 'created_at']
+    rating = FloatField(min_value=1, max_value=5)
