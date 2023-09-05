@@ -10,8 +10,25 @@ services:
       - DB_NAME=bringel
       - ALLOWED_HOSTS=*
       - SECRET_KEY=qi2r^v#s8ptux7%@_*hib*yyz+jn0s=@k4ny6)8@k!7fq8d!*x
+      - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
       - postgres
+      - redis
+  worker:
+    build:
+      context: .
+    entrypoint: "celery -A bringel worker -l INFO"
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=dev
+      - DB_PASSWORD=P4ssw0rd
+      - DB_NAME=bringel
+      - ALLOWED_HOSTS=*
+      - SECRET_KEY=qi2r^v#s8ptux7%@_*hib*yyz+jn0s=@k4ny6)8@k!7fq8d!*x
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
   postgres:
     image: postgres:15.4-alpine
     restart: always
@@ -19,3 +36,6 @@ services:
       - POSTGRES_PASSWORD=P4ssw0rd
       - POSTGRES_USER=dev
       - POSTGRES_DB=bringel
+  redis:
+    image: redis:7.2.0-alpine
+    restart: always
