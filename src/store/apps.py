@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_save
 
-from store.signals import customer_rating_post_save
+from store.signals import customer_rating_post_save, product_variant_post_save
 
 
 class StoreConfig(AppConfig):
@@ -10,3 +10,4 @@ class StoreConfig(AppConfig):
 
     def ready(self):
         post_save.connect(customer_rating_post_save, sender='store.CustomerRating')
+        post_save.connect(product_variant_post_save, sender='store.ProductVariant')
