@@ -107,4 +107,10 @@ class ProductDetailSerializer(ModelSerializer):
     tags = SlugRelatedField(slug_field='name', help_text='Tag Name', many=True, queryset=Tag.objects.all())
     rating = FloatField(help_text='Calculated rating', min_value=1, max_value=5, read_only=True)
     variants = ProductVariantNestedSerializer(many=True, read_only=True)
-    ratings = CustomerRatingReadSerializer(many=True)
+    ratings = SerializerMethodField(label='Ratings', read_only=True)
+
+    @swagger_serializer_method(serializer_or_field=CustomerRatingReadSerializer(many=True))
+    def get_ratings(self, instance):
+        query = instance.ratings.all()[:10]  # Only show last 10 ratings
+        serializer = CustomerRatingReadSerializer(query, many=True)
+        return serializer.data

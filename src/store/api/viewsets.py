@@ -1,6 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
@@ -41,6 +41,7 @@ class ProductVariantViewSet(ModelViewSet):
     filterset_fields = ['product', 'variant_name', 'variant_value', 'in_stock']
 
 
-class CustomerRatingViewset(CreateModelMixin, GenericViewSet):
+class CustomerRatingViewset(CreateModelMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = CustomerRatingSerializer
     queryset = CustomerRating.objects.all()
+    filterset_fields = ['product']
