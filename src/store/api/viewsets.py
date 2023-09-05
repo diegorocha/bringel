@@ -12,16 +12,19 @@ from store.models import Tag, Supplier, Product, ProductVariant, CustomerRating
 class TagViewSet(ModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    filterset_fields = ['name']
 
 
 class SupplierViewSet(ModelViewSet):
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
+    filterset_fields = ['name']
 
 
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
+    filterset_fields = ['supplier', 'tags']
 
     @swagger_auto_schema(operation_description="Return product with all related data",
                          responses={200: ProductDetailSerializer()})
@@ -35,6 +38,7 @@ class ProductViewSet(ModelViewSet):
 class ProductVariantViewSet(ModelViewSet):
     serializer_class = ProductVariantSerializer
     queryset = ProductVariant.objects.all()
+    filterset_fields = ['product', 'variant_name', 'variant_value', 'in_stock']
 
 
 class CustomerRatingViewset(CreateModelMixin, GenericViewSet):
