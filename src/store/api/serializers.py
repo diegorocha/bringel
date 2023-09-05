@@ -1,9 +1,11 @@
-from rest_framework.fields import CharField, FloatField, IntegerField, BooleanField, DecimalField
+from drf_yasg.utils import swagger_serializer_method
+from rest_framework.fields import CharField, FloatField, IntegerField, BooleanField, DecimalField, DateTimeField, \
+    SerializerMethodField
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 
-from store.models import Tag, Supplier, ProductVariant, Product, CustomerRating
+from store.models import Tag, Supplier, ProductVariant, Product, CustomerRating, PriceHistory
 
 
 class TagSerializer(ModelSerializer):
@@ -25,10 +27,19 @@ class SupplierSerializer(ModelSerializer):
                      validators=[UniqueValidator(queryset=Supplier.objects.all())])
 
 
+class PriceHistorySerializer(ModelSerializer):
+    class Meta:
+        model = PriceHistory
+        fields = ['price', 'updated_at']
+
+    price = DecimalField(label='Price', max_digits=8, decimal_places=2, read_only=True)
+    updated_at = DateTimeField(label='Updated At', read_only=True)
+
+
 class ProductVariantSerializer(ModelSerializer):
     class Meta:
         model = ProductVariant
-        fields = ['id', 'product', 'variant_name', 'variant_value', 'sku', 'in_stock', 'price']
+        fields = ['id', 'product', 'variant_name', 'variant_value', 'sku', 'in_stock', 'price', 'price_history']
 
     id = IntegerField(label='Id', help_text='ProductVariant ID', read_only=True)
     product = PrimaryKeyRelatedField(label='Product', help_text='Product ID', queryset=Product.objects.all(),
@@ -39,6 +50,13 @@ class ProductVariantSerializer(ModelSerializer):
                     validators=[UniqueValidator(queryset=ProductVariant.objects.all())])
     in_stock = BooleanField(label='In Stock', help_text='', default=False)
     price = DecimalField(label='Price', max_digits=8, decimal_places=2, required=True)
+    price_history = SerializerMethodField(label='Price History', read_only=True)
+
+    @swagger_serializer_method(serializer_or_field=PriceHistorySerializer(many=True))
+    def get_price_history(self, instance):
+        query = instance.price_history.all()[:10]  # Only show last 10 prices
+        serializer = PriceHistorySerializer(query, many=True)
+        return serializer.data
 
 
 class ProductVariantNestedSerializer(ModelSerializer):
