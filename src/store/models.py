@@ -47,7 +47,7 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='variants')
     variant_name = models.CharField('Variant Name', max_length=20, blank=False, null=False)
     variant_value = models.CharField('Variant Value', max_length=50, blank=False, null=False)
-    sku = models.CharField('SKU', max_length=8, blank=False, null=False)
+    sku = models.CharField('SKU', max_length=8, blank=False, null=False, unique=True)
     in_stock = models.BooleanField('In Stock',  blank=True, default=False)
     price = models.DecimalField('Price', max_digits=8, decimal_places=2, blank=False, null=False)
 
