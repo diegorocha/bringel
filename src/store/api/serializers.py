@@ -1,6 +1,7 @@
 from rest_framework.fields import CharField, FloatField, IntegerField, BooleanField, DecimalField
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.validators import UniqueValidator
 
 from store.models import Tag, Supplier, ProductVariant, Product, CustomerRating
 
@@ -10,7 +11,8 @@ class TagSerializer(ModelSerializer):
         model = Tag
         fields = ['id', 'name', 'description']
     id = IntegerField(label='Id', help_text='Tag ID', read_only=True)
-    name = CharField(label='Name', help_text='Tag name', max_length=50, required=True)
+    name = CharField(label='Name', help_text='Tag name', max_length=50, required=True,
+                     validators=[UniqueValidator(queryset=Tag.objects.all())])
     description = CharField(label='Description', help_text='Tag description', max_length=100, required=False)
 
 
@@ -19,7 +21,8 @@ class SupplierSerializer(ModelSerializer):
         model = Supplier
         fields = ['id', 'name']
     id = IntegerField(label='Id', help_text='Supplier ID', read_only=True)
-    name = CharField(label='Name', help_text='Supplier name', max_length=100, required=True)
+    name = CharField(label='Name', help_text='Supplier name', max_length=100, required=True,
+                     validators=[UniqueValidator(queryset=Supplier.objects.all())])
 
 
 class ProductVariantSerializer(ModelSerializer):
@@ -32,7 +35,8 @@ class ProductVariantSerializer(ModelSerializer):
                                      required=True)
     variant_name = CharField(label='Variant Name', help_text='Name of variant', max_length=20, required=True)
     variant_value = CharField(label='Variant Value', help_text='Value of variant', max_length=50, required=True)
-    sku = CharField(label='SKU', help_text='SKU code', max_length=8, required=True)
+    sku = CharField(label='SKU', help_text='SKU code', max_length=8, required=True,
+                    validators=[UniqueValidator(queryset=ProductVariant.objects.all())])
     in_stock = BooleanField(label='In Stock', help_text='', default=False)
     price = DecimalField(label='Price', max_digits=8, decimal_places=2, required=True)
 
