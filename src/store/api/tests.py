@@ -1,4 +1,4 @@
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import APITestCase
 
 from store.models import Tag
 
@@ -15,4 +15,3 @@ class TagAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(Tag.objects.count(), 1)
-
