@@ -1,3 +1,4 @@
+from django_restql.mixins import DynamicFieldsMixin
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework.fields import CharField, FloatField, IntegerField, BooleanField, DecimalField, DateTimeField, \
     SerializerMethodField
@@ -8,7 +9,7 @@ from rest_framework.validators import UniqueValidator
 from store.models import Tag, Supplier, ProductVariant, Product, CustomerRating, PriceHistory
 
 
-class TagSerializer(ModelSerializer):
+class TagSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = Tag
         fields = ['id', 'name', 'description']
@@ -18,7 +19,7 @@ class TagSerializer(ModelSerializer):
     description = CharField(label='Description', help_text='Tag description', max_length=100, required=False)
 
 
-class SupplierSerializer(ModelSerializer):
+class SupplierSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = Supplier
         fields = ['id', 'name']
@@ -27,7 +28,7 @@ class SupplierSerializer(ModelSerializer):
                      validators=[UniqueValidator(queryset=Supplier.objects.all())])
 
 
-class PriceHistorySerializer(ModelSerializer):
+class PriceHistorySerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = PriceHistory
         fields = ['price', 'updated_at']
@@ -36,7 +37,7 @@ class PriceHistorySerializer(ModelSerializer):
     updated_at = DateTimeField(label='Updated At', read_only=True)
 
 
-class ProductVariantSerializer(ModelSerializer):
+class ProductVariantSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = ['id', 'product', 'variant_name', 'variant_value', 'sku', 'in_stock', 'price', 'price_history']
@@ -59,7 +60,7 @@ class ProductVariantSerializer(ModelSerializer):
         return serializer.data
 
 
-class ProductVariantNestedSerializer(ModelSerializer):
+class ProductVariantNestedSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = ['id', 'variant_name', 'variant_value', 'sku', 'in_stock', 'price']
@@ -72,7 +73,7 @@ class ProductVariantNestedSerializer(ModelSerializer):
     price = DecimalField(label='Price', max_digits=8, decimal_places=2, required=True)
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'supplier', 'name', 'description', 'tags', 'rating', 'variants']
@@ -88,7 +89,7 @@ class SimpleProductSerializer(ProductSerializer):
         fields = ['id', 'supplier', 'name', 'description', 'tags', 'rating']
 
 
-class CustomerRatingSerializer(ModelSerializer):
+class CustomerRatingSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = CustomerRating
         fields = ['product', 'rating', 'description', 'created_at']
@@ -97,14 +98,14 @@ class CustomerRatingSerializer(ModelSerializer):
     rating = IntegerField(help_text='Rating from 1 to 5',  min_value=1, max_value=5)
 
 
-class CustomerRatingReadSerializer(ModelSerializer):
+class CustomerRatingReadSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = CustomerRating
         fields = ['rating', 'description', 'created_at']
     rating = IntegerField(help_text='Rating from 1 to 5', min_value=1, max_value=5)
 
 
-class ProductDetailSerializer(ModelSerializer):
+class ProductDetailSerializer(DynamicFieldsMixin, ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'supplier', 'name', 'description', 'tags', 'rating', 'ratings', 'variants', 'related_products']
