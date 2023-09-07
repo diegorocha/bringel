@@ -35,6 +35,10 @@ class Product(models.Model):
     tags = models.ManyToManyField(Tag, related_name='products')
     rating = models.FloatField('Rating', null=True, blank=True)
 
+    @property
+    def related_products(self):
+        return Product.objects.filter(tags__in=self.tags.all()).distinct().exclude(id=self.id)[:10]
+
     def __str__(self):
         return self.name
 
