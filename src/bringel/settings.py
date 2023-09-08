@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'django_filters',
+    'oauth2_provider',
     'rest_framework',
     'drf_yasg',
 ]
@@ -171,8 +172,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+OAUTH2_PROVIDER = {
+    'ACCESS_TOKEN_GENERATOR': 'bringel.jwt.jwt_token_generator',
+    'SCOPES': {
+        'admin': 'Admin scope',
+        'user': 'User scope',
+    },
+    'DEFAULT_SCOPES': ['user'],
+}
