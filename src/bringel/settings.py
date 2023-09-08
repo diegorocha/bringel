@@ -1,8 +1,9 @@
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 from decouple import config
+from django.urls import reverse_lazy
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -191,4 +192,24 @@ OAUTH2_PROVIDER = {
         'user': 'User scope',
     },
     'DEFAULT_SCOPES': ['user'],
+}
+
+SWAGGER_SETTINGS = {
+    'DISPLAY_OPERATION_ID': False,
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+          'type': 'oauth2',
+          'tokenUrl': reverse_lazy('oauth2_provider:token'),
+          'flow': 'application',
+          'scopes': {
+            'admin': 'Full access',
+            'user': 'Read access',
+          }
+        }
+    }
+}
+
+REDOC_SETTINGS = {
+   'LAZY_RENDERING': False,
 }
