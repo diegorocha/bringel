@@ -46,6 +46,7 @@ psycopg-binary==3.1.10
 pycodestyle==2.11.0
 pycparser==2.21
 pyflakes==3.1.0
+PyJWT==2.8.0
 pyPEG2==2.15.2
 pytest==7.4.1
 pytest-cov==4.1.0
