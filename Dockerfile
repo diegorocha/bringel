@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 RUN apk update && apk upgrade
 
-RUN apk add gcc musl-dev python3-dev libxslt-dev
+RUN apk add gcc musl-dev python3-dev libxslt-dev libffi-dev
 
 RUN pip install pip==23.2.1
 
