@@ -2,7 +2,7 @@
 branch = True
 
 [report]
-omit = */migrations/*,*/asgi.py,*/wsgi.py
+omit = */migrations/*,*/asgi.py,*/wsgi.py,*/factories.py,*/tests.py
 ; Regexes for lines to exclude from consideration
 exclude_also =
     ; Don't complain about missing debug-only code:
