@@ -71,6 +71,6 @@ target/
 .vscode
 .idea
 
-core/staticfiles/
+staticfiles
 .terraform
 terraform.tfvars

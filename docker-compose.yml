@@ -4,6 +4,7 @@ services:
     build:
       context: .
     environment:
+      - DEBUG=False
       - DB_HOST=postgres
       - DB_USER=dev
       - DB_PASSWORD=P4ssw0rd
@@ -19,6 +20,7 @@ services:
       context: .
     entrypoint: "celery -A bringel worker -l INFO"
     environment:
+      - DEBUG=False
       - DB_HOST=postgres
       - DB_USER=dev
       - DB_PASSWORD=P4ssw0rd
