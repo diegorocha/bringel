@@ -1,5 +1,8 @@
 VERSION=dev
 
+lint:
+	@flake8
+
 test:
 	@pytest src --cov=bringel --cov=store --cov-report html --cov-report term-missing:skip-covered
 

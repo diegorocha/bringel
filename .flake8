@@ -2,4 +2,4 @@
 max-line-length = 120
 exclude=*/migrations/*
 per-file-ignores =
-    ./bringel/settings-test.py:F403,F405
+    ./src/bringel/settings-test.py:F403,F405
