@@ -4,6 +4,7 @@ services:
     build:
       context: .
     environment:
+      - APP_MODE=web
       - DEBUG=False
       - DB_HOST=postgres
       - DB_USER=dev
@@ -18,8 +19,8 @@ services:
   worker:
     build:
       context: .
-    entrypoint: "celery -A bringel worker -l INFO"
     environment:
+      - APP_MODE=worker
       - DEBUG=False
       - DB_HOST=postgres
       - DB_USER=dev
