@@ -9,3 +9,9 @@ DATABASES = {
         'ATOMIC_REQUESTS': True,
     }
 }
+
+# Overrides celery options for testing
+CELERY_BROKER_URL = ''
+BROKER_BACKEND = 'memory'
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
