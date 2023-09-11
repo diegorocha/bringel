@@ -1,7 +1,8 @@
 from drf_yasg.utils import swagger_auto_schema
+from oauth2_provider.contrib.rest_framework import TokenHasScope
 from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
@@ -51,4 +52,5 @@ class CustomerRatingViewset(CreateModelMixin, ListModelMixin, RetrieveModelMixin
     serializer_class = CustomerRatingSerializer
     queryset = CustomerRating.objects.all()
     filterset_fields = ['product']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [TokenHasScope]
+    required_scopes = ['user']
