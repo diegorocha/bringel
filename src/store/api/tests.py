@@ -6,6 +6,9 @@ from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.test import APITestCase
 
 from store.api.permissions import TokenHasAdminScope, UserReadsAdminWrites
+from store.api.serializers import ProductVariantSerializer, ProductDetailSerializer, SimpleProductSerializer
+from store.api.viewsets import ProductViewSet
+from store.factories import ProductVariantFactory, PriceHistoryFactory, CustomerRatingFactory, ProductFactory
 from store.models import Tag
 
 
@@ -82,3 +85,36 @@ class UserReadsAdminWritesTestCase(TestCase):
         for method in methods:
             request = self.request(method=method, successful_authenticator=authenticator, auth=auth)
             self.assertTrue(UserReadsAdminWrites().has_permission(request, None))
+
+
+class ProductVariantSerializerTestCase(TestCase):
+    def test_get_price_history_returns_up_to_10_prices(self):
+        product_variant = ProductVariantFactory()
+        PriceHistoryFactory.create_batch(20, product_variant=product_variant)
+        data = ProductVariantSerializer().get_price_history(product_variant)
+        self.assertLessEqual(len(data), 10)
+
+
+class ProductDetailSerializerTestCase(TestCase):
+    def test_get_ratings_returns_up_to_10_prices(self):
+        product = ProductFactory()
+        CustomerRatingFactory.create_batch(20, product=product)
+        data = ProductDetailSerializer().get_ratings(product)
+        self.assertLessEqual(len(data), 10)
+
+    def test_get_related_products_uses_SimpleProductSerializer(self):
+        product = ProductFactory()
+        data = ProductDetailSerializer().get_related_products(product)
+        self.assertIsInstance(data.serializer.child, SimpleProductSerializer)
+
+
+class ProductViewSetTestCase(TestCase):
+    def test_detailed_uses_ProductDetailSerializer(self):
+        product = ProductFactory()
+        Request = namedtuple('Request', ['query_params'])
+        request = Request(query_params={})
+        viewset = ProductViewSet()
+        viewset.request = request
+        viewset.kwargs = {'pk': product.id}
+        response = viewset.detailed(request, pk=product.id)
+        self.assertIsInstance(response.data.serializer, ProductDetailSerializer)
